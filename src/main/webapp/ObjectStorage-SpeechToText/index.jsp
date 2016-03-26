@@ -6,9 +6,12 @@
     </head>
     <body>
         <form action="convert.jsp" method="post" enctype="multipart/form-data">
-            Enter a WAV file to convert to text: <input type="file" name="file" /><br>
+            Select a WAV file to convert to text: <input type="file" name="file" /><br>
             <input type="submit" value="Convert" />
         </form>
+        <br><br>
+        Sample WAV file (sample.wav) can be found in repository under the subdirectory: <br>
+        src/main/resources/
 
 
         <br><br>
