@@ -13,7 +13,7 @@
 %>
 Information Extraction Complete
 <br><br>
-<%=alResult.toString()%->
+<%=alResult.toString()%>
 
 <br><br>
 Go to <a href= "viewinfo.jsp">viewinfo.jsp</a> to view contents from MongoDB.
