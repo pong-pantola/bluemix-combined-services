@@ -62,7 +62,7 @@ public class CloudantService {
         String strJSON = null;
 
         if (idList.size() > 0) {
-            String strID = idList.get(idList.size() - 1);
+            String strID = idList.get(0);
             Database db = cloudant.database(dbName, true);
             InputStream inStream = db.find(strID);
             strJSON = InputStreamUtility.toString(inStream);
