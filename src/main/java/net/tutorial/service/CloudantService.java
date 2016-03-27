@@ -3,6 +3,7 @@ package net.tutorial.service;
 import com.cloudant.client.api.*;
 import com.cloudant.client.api.model.Response;
 import net.tutorial.service.credential.CloudantCredential;
+import net.tutorial.utility.DateTimeUtility;
 import net.tutorial.utility.InputStreamUtility;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -37,6 +38,7 @@ public class CloudantService {
 
         try {
             JSONObject json = (JSONObject) parser.parse(strJSON);
+            json.put("timestamp", DateTimeUtility.getTimestamp().getTime());
 
             Response rs = db.save(json);
         }catch(Exception e){
@@ -59,22 +61,35 @@ public class CloudantService {
 
     public String getLast(String dbName){
         List<String> idList = getID(dbName);
-        String strJSON = null;
-
-        if (idList.size() > 0) {
-            String strID = idList.get(idList.size()-1);
-            Database db = cloudant.database(dbName, true);
-            InputStream inStream = db.find(strID);
-            strJSON = InputStreamUtility.toString(inStream);
+        JSONObject jsonLast = null;
+        String strLast = null;
+        Database db = cloudant.database(dbName, true);
+        for(String id : idList){
+            InputStream inStream = db.find(id);
+            String strJSON = InputStreamUtility.toString(inStream);
             try{
-            inStream.close();
+                inStream.close();
             }catch(Exception e){
                 System.err.println("CloudantService.getLast(String dbName) Exception: " + e.getMessage());
             }
 
+            JSONObject json = null;
+            try {
+                JSONParser parser = new JSONParser();
+                json = (JSONObject) parser.parse(strJSON);
+            }catch(Exception e){
+                System.err.println("CloudantService.getLast(String dbName) Exception: " + e.getMessage());
+            }
+
+
+            if (jsonLast == null || (Long) jsonLast.get("timestamp") < (Long) json.get("timestamp")){
+                jsonLast = json;
+                strLast = jsonLast.toString();
+            }
+
         }
 
-        return strJSON;
+        return strLast;
     }
 
 
